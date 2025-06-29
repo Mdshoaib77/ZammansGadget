@@ -592,6 +592,161 @@
 // export default Collection;
 
 
+// import React, { useContext, useEffect, useState } from 'react';
+// import { ShopContext } from '../context/ShopContext';
+// import Title from '../components/Title';
+// import ProductItem from '../components/ProductItem';
+// import { useLocation, useNavigate } from 'react-router-dom';
+
+// const Collection = () => {
+//   const { products, search, showSearch } = useContext(ShopContext);
+//   const [filterProducts, setFilterProducts] = useState([]);
+//   const [allCategories, setAllCategories] = useState([]);
+//   const [activeCategory, setActiveCategory] = useState(null);
+//   const [sortType, setSortType] = useState('relavent');
+
+//   const location = useLocation();
+//   const navigate = useNavigate();
+
+//   // Category load from backend
+//   useEffect(() => {
+//     const fetchCategories = async () => {
+//       try {
+//         const res = await fetch('http://localhost:4000/api/product/categories');
+//         const data = await res.json();
+//         if (data.success) {
+//           setAllCategories(data.categories);
+//         }
+//       } catch (error) {
+//         console.error(error);
+//       }
+//     };
+//     fetchCategories();
+//   }, []);
+
+//   // URL Param handle
+//   useEffect(() => {
+//     const params = new URLSearchParams(location.search);
+//     const categoryFromUrl = params.get('category');
+
+//     if (categoryFromUrl) {
+//       setActiveCategory(categoryFromUrl);
+//     } else {
+//       setActiveCategory(null);
+//     }
+//   }, [location.search]);
+
+//   // Filter Products
+//   useEffect(() => {
+//     let filtered = products;
+
+//     if (showSearch && search) {
+//       filtered = filtered.filter(p =>
+//         p.name.toLowerCase().includes(search.toLowerCase())
+//       );
+//     }
+
+//     if (activeCategory) {
+//       filtered = filtered.filter(p => p.category === activeCategory);
+//     }
+
+//     setFilterProducts(filtered);
+//   }, [products, activeCategory, search, showSearch]);
+
+//   // Sorting Logic
+//   useEffect(() => {
+//     let sortedProducts = [...filterProducts];
+//     switch (sortType) {
+//       case 'low-high':
+//         sortedProducts.sort((a, b) => a.price - b.price);
+//         break;
+//       case 'high-low':
+//         sortedProducts.sort((a, b) => b.price - a.price);
+//         break;
+//       default:
+//         break;
+//     }
+//     setFilterProducts(sortedProducts);
+//   }, [sortType]);
+
+//   return (
+//     <div className="px-4 pt-10 sm:px-6 lg:px-8 max-w-[1300px] mx-auto">
+      
+//       {/* Category Filter Buttons */}
+//       <div className="flex flex-wrap justify-center gap-3 py-1 mb-6 overflow-x-auto sm:justify-start no-scrollbar">
+//         {allCategories.map((cat, i) => (
+//           <button
+//             key={i}
+//             onClick={() => {
+//               setActiveCategory(cat);
+//               navigate(`/collection?category=${encodeURIComponent(cat)}`);
+//             }}
+//             className={`px-4 py-2 rounded-md border font-medium whitespace-nowrap
+//               ${activeCategory === cat
+//                 ? 'bg-blue-600 text-white border-blue-600 shadow-md'
+//                 : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-100'}
+//               transition-colors duration-300`}
+//           >
+//             {cat}
+//           </button>
+//         ))}
+//       </div>
+
+//       {/* Title */}
+//       <div className="mb-6 text-center sm:text-left">
+//         <Title text1="ALL" text2="COLLECTIONS" />
+//       </div>
+
+//       {/* Sort Select */}
+//       <div className="flex justify-center mb-6 sm:justify-end">
+//         <select
+//           value={sortType}
+//           onChange={(e) => setSortType(e.target.value)}
+//           className="px-3 py-2 text-sm border border-gray-300 rounded-md"
+//         >
+//           <option value="relavent">Sort by: Relevant</option>
+//           <option value="low-high">Sort by: Low to High</option>
+//           <option value="high-low">Sort by: High to Low</option>
+//         </select>
+//       </div>
+
+//       {/* Product Grid */}
+//       <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-4">
+//         {filterProducts.length > 0 ? (
+//           filterProducts.map((item) => (
+//             <ProductItem
+//               key={item._id}
+//               name={item.name}
+//               id={item._id}
+//               price={item.price}
+//               image={item.image}
+//             />
+//           ))
+//         ) : (
+//           !activeCategory ? (
+//             products.map((item) => (
+//               <ProductItem
+//                 key={item._id}
+//                 name={item.name}
+//                 id={item._id}
+//                 price={item.price}
+//                 image={item.image}
+//               />
+//             ))
+//           ) : (
+//             <p className="text-center text-gray-500 col-span-full">
+//               No products found.
+//             </p>
+//           )
+//         )}
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default Collection;
+
+
 import React, { useContext, useEffect, useState } from 'react';
 import { ShopContext } from '../context/ShopContext';
 import Title from '../components/Title';
@@ -603,12 +758,12 @@ const Collection = () => {
   const [filterProducts, setFilterProducts] = useState([]);
   const [allCategories, setAllCategories] = useState([]);
   const [activeCategory, setActiveCategory] = useState(null);
-  const [sortType, setSortType] = useState('relavent');
+  const [sortType, setSortType] = useState('relevant'); // spelling fixed
 
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Category load from backend
+  // Load categories from backend
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -624,7 +779,7 @@ const Collection = () => {
     fetchCategories();
   }, []);
 
-  // URL Param handle
+  // Handle URL param for category
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const categoryFromUrl = params.get('category');
@@ -636,7 +791,7 @@ const Collection = () => {
     }
   }, [location.search]);
 
-  // Filter Products
+  // Filter products by search and category
   useEffect(() => {
     let filtered = products;
 
@@ -653,7 +808,7 @@ const Collection = () => {
     setFilterProducts(filtered);
   }, [products, activeCategory, search, showSearch]);
 
-  // Sorting Logic
+  // Sort filtered products
   useEffect(() => {
     let sortedProducts = [...filterProducts];
     switch (sortType) {
@@ -664,6 +819,7 @@ const Collection = () => {
         sortedProducts.sort((a, b) => b.price - a.price);
         break;
       default:
+        // 'relevant' or other sorts: no sorting or default sorting
         break;
     }
     setFilterProducts(sortedProducts);
@@ -704,7 +860,7 @@ const Collection = () => {
           onChange={(e) => setSortType(e.target.value)}
           className="px-3 py-2 text-sm border border-gray-300 rounded-md"
         >
-          <option value="relavent">Sort by: Relevant</option>
+          <option value="relevant">Sort by: Relevant</option>
           <option value="low-high">Sort by: Low to High</option>
           <option value="high-low">Sort by: High to Low</option>
         </select>
@@ -745,8 +901,6 @@ const Collection = () => {
 };
 
 export default Collection;
-
-
 
 
 
