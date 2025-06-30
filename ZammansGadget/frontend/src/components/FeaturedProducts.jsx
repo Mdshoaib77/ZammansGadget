@@ -1,51 +1,111 @@
-import React, { useContext, useState, useEffect } from 'react';
+// import React, { useState, useContext, useEffect } from 'react';
+// import { ShopContext } from '../context/ShopContext';
+// import ProductItem from './ProductItem';
+
+// const FeaturedProducts = () => {
+//   const { products } = useContext(ShopContext);
+//   const [activeTab, setActiveTab] = useState('phones');
+//   const [phones, setPhones] = useState([]);
+//   const [bestsellers, setBestsellers] = useState([]);
+
+//   useEffect(() => {
+//     setPhones(products.filter(p => p.category === 'official phones'));
+//     setBestsellers(products.filter(p => p.bestseller === true));
+//   }, [products]);
+
+//   return (
+//     <div className="px-4 py-10 mx-auto max-w-[1300px]">
+//       <h2 className="mb-4 text-3xl font-bold text-center">Featured Products</h2>
+
+//       {/* Tabs */}
+//       <div className="flex justify-center gap-6 mb-8 text-lg font-semibold">
+//         <button
+//           onClick={() => setActiveTab('phones')}
+//           className={`border-b-2 pb-1 transition-all duration-300 ${
+//             activeTab === 'phones'
+//               ? 'border-orange-500 text-orange-600'
+//               : 'border-transparent text-gray-500 hover:text-orange-500'
+//           }`}
+//         >
+//           PHONES
+//         </button>
+//         <button
+//           onClick={() => setActiveTab('bestsellers')}
+//           className={`border-b-2 pb-1 transition-all duration-300 ${
+//             activeTab === 'bestsellers'
+//               ? 'border-orange-500 text-orange-600'
+//               : 'border-transparent text-gray-500 hover:text-orange-500'
+//           }`}
+//         >
+//           BEST SELLING
+//         </button>
+//       </div>
+
+//       {/* Product Grid */}
+//       <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-4">
+//         {(activeTab === 'phones' ? phones : bestsellers).map((item) => (
+//           <ProductItem
+//             key={item._id}
+//             id={item._id}
+//             name={item.name}
+//             image={item.image}
+//             price={item.price}
+//           />
+//         ))}
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default FeaturedProducts;
+
+
+import React, { useState, useContext, useEffect } from 'react';
 import { ShopContext } from '../context/ShopContext';
 import ProductItem from './ProductItem';
 
 const FeaturedProducts = () => {
   const { products } = useContext(ShopContext);
-
-  // State to track which tab is active (phones or bestseller)
   const [activeTab, setActiveTab] = useState('phones');
+  const [phones, setPhones] = useState([]);
+  const [bestsellers, setBestsellers] = useState([]);
 
-  // Phones filtered products
-  const phones = products.filter((p) => p.category === 'official phones');
-
-  // Best seller filtered products
-  const bestSellers = products.filter((p) => p.bestseller);
-
-  // Decide which products to show based on active tab
-  const displayedProducts = activeTab === 'phones' ? phones : bestSellers;
+  useEffect(() => {
+    setPhones(products.filter(p => p.category.toLowerCase() === 'official phones'));
+    setBestsellers(products.filter(p => p.bestseller === true));
+  }, [products]);
 
   return (
-    <div className="flex flex-col gap-8 px-4 py-10 mx-auto max-w-7xl md:flex-row">
-      
-      {/* Left side - Tabs */}
-      <div className="flex flex-col space-y-6 md:w-1/4">
+    <div className="px-4 py-10 mx-auto max-w-[1300px]">
+      <h2 className="mb-4 text-3xl font-bold text-center">Featured Products</h2>
+
+      {/* Tabs */}
+      <div className="flex justify-center gap-6 mb-8 text-lg font-semibold">
         <button
           onClick={() => setActiveTab('phones')}
-          className={`text-xl font-bold p-3 rounded ${
-            activeTab === 'phones' ? 'bg-indigo-600 text-white' : 'bg-gray-200'
+          className={`border-b-2 pb-1 transition-all duration-300 ${
+            activeTab === 'phones'
+              ? 'border-orange-500 text-orange-600'
+              : 'border-transparent text-gray-500 hover:text-orange-500'
           }`}
         >
-          Phones
+          PHONES
         </button>
-
         <button
-          onClick={() => setActiveTab('bestseller')}
-          className={`text-xl font-bold p-3 rounded ${
-            activeTab === 'bestseller' ? 'bg-indigo-600 text-white' : 'bg-gray-200'
+          onClick={() => setActiveTab('bestsellers')}
+          className={`border-b-2 pb-1 transition-all duration-300 ${
+            activeTab === 'bestsellers'
+              ? 'border-orange-500 text-orange-600'
+              : 'border-transparent text-gray-500 hover:text-orange-500'
           }`}
         >
-          Best Selling
+          BEST SELLING
         </button>
       </div>
 
-      {/* Right side - Products Grid */}
-      <div className="grid grid-cols-2 gap-6 md:w-3/4 sm:grid-cols-3 md:grid-cols-4">
-        {displayedProducts.length === 0 && <p>No products found.</p>}
-
-        {displayedProducts.map((item) => (
+      {/* Product Grid */}
+      <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-4">
+        {(activeTab === 'phones' ? phones : bestsellers).map((item) => (
           <ProductItem
             key={item._id}
             id={item._id}
